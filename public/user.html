@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<div  ng-controller="userController">
+	<form class="form-auth" id="id01" ng-show="authenticated">
+		<h2>Users Form</h2>
+		
+		<label><b>Username</b></label>
+		<input type="text" placeholder="Type the user" name="uname"  class="form-control" required ng-model="CurrentUser.username" required>
+	
+		<label><b>Password</b></label>
+		<input type="password" placeholder="Type the pass" name="psw"  class="form-control" required ng-model="CurrentUser.password" required>
+		
+		<label><b>Name</b></label>
+		<input type="text" placeholder="Type the name" name="name"  class="form-control" required ng-model="CurrentUser.name" required>
+		
+		<br>User:{{CurrentUser.username}} 
+		<br>Pass:{{CurrentUser.password}}
+		<br>Name:{{CurrentUser.name}}
+		<br>Admin:{{CurrentUser.admin}}
+		<br>Created at:{{CurrentUser.created_at}}
+		<br>Updated at:{{CurrentUser.updated_at}}
+		<p class="text-warning">{{error_message}}</p>
+		<br>
+	</form>
+	<form class="form-btn" ng-show="authenticated">
+			<button ng-click="InsertUser()" class="btn btn-primary">Register</button>
+			<button ng-click="FindUser()" class="btn btn-primary">Search</button>
+			<button ng-click="UpdateUser()" class="btn btn-primary">Update</button>
+			<button ng-click="DeleteUser()" class="btn btn-primary">Delete</button>
+			<button ng-click="CleanUser()" class="btn btn-primary">Clean</button>
+	</form>
+	
+	
+
+	<div id="user-stream">
+		<h4>Users</h4>
+			<div class="post" ng-repeat="user in users | orderBy:'username':true" ng-class-odd="'odd'" ng-class-even="'even'"> 
+				<p>Username: {{user.username}}</p>
+				<small>Name: {{user.name}}</small>
+				<small class="pull-right">{{user.created_at | date:"h:mma 'on' MMM d, y"}}</small>
+				</br>
+				<small>Pass: {{user.password}}</small>
+				<small class="pull-right">{{user.updated_at | date:"h:mma 'on' MMM d, y"}}</small>
+			</div>
+	</div>
+</div>

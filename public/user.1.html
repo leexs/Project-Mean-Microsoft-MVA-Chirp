@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	</head>
+	<body>
+		<h2>User Form</h2>
+
+		<div id="id01"  ng-app="app" ng-controller="HttpGetController">
+			<div>
+				<label><b>User</b></label>
+				<input type="text" placeholder="Type the user" name="uname" required ng-model="CurrentUser.username" required>
+	
+				<label><b>Pass</b></label>
+				<input type="password" placeholder="Type the pass" name="psw" required ng-model="CurrentUser.password" required>
+				
+				<label><b>Name</b></label>
+				<input type="text" placeholder="Type the name" name="name" required ng-model="CurrentUser.name" required>
+				<br>User:{{CurrentUser.username}} 
+				<br>Pass:{{CurrentUser.password}}
+				<br>Name:{{CurrentUser.name}}
+				<br>Admin:{{CurrentUser.admin}}
+				<br>Created at:{{CurrentUser.created_at}}
+				<br>Updated at:{{CurrentUser.updated_at}}
+				<br>
+				<button ng-click="InsertUser()">Register</button>
+				<button ng-click="FindUser()">Search</button>
+				<button ng-click="UpdateUser()">Update</button>
+				<button ng-click="DeleteUser()">Delete</button>
+				<button ng-click="CleanUser()">Clean</button>
+			</div>
+			<div ng-repeat="user in users"> 
+				<p>User: {{user.username}} => Name: {{user.name}}</p>
+			</div>
+		</div>
+		
+		
+
+		<script>
+		var app = angular.module("app", []);
+		app.controller("HttpGetController", function ($scope, $http) {
+
+			
+			$scope.CleanUser = function () {
+				$scope.CurrentUser = {}
+			}
+			
+			$scope.DeleteUser = function () {
+				
+				var config = {
+					headers : {
+						'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+					}
+				}
+				$http.delete('/api/user/' + $scope.CurrentUser.username).
+				then(function(response) {
+					$scope.CurrentUser = response.data;
+					console.log(response.data);
+					console.log(response.status);
+					$scope.ListUsers();
+				}, function(response) {
+					console.log(response.data || 'Request failed');
+					console.log(response.status);
+				});
+			};
+
+			$scope.UpdateUser = function () {
+				
+				var data = JSON.stringify($scope.CurrentUser);
+				
+				var config = {
+					headers : {
+						'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+					}
+				}
+				console.log(data);
+				$http.put('/api/user/' + $scope.CurrentUser.username, data).
+				then(function(response) {
+					console.log(response.data);
+					console.log(response.status);
+					$scope.ListUsers();
+				}, function(response) {
+					console.log(response.data || 'Request failed');
+					console.log(response.status);
+				});
+				
+			};
+			
+			
+			$scope.FindUser = function () {
+				
+				var config = {
+					headers : {
+						'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+					}
+				}
+				$http.get('/api/user/' + $scope.CurrentUser.username).
+				then(function(response) {
+					$scope.CurrentUser = response.data;
+					console.log(response.data);
+					console.log(response.status);
+					$scope.ListUsers();
+				}, function(response) {
+					console.log(response.data || 'Request failed');
+					console.log(response.status);
+				});
+				
+			};
+			
+			$scope.InsertUser = function () {
+				
+				var data = JSON.stringify($scope.CurrentUser);
+				
+				var config = {
+					headers : {
+						'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+					}
+				}
+
+				$http.post('/api/users', data).
+				then(function(response) {
+					console.log(response.data);
+					console.log(response.status);
+					$scope.ListUsers();
+				}, function(response) {
+					console.log(response.data || 'Request failed');
+					console.log(response.status);
+				});
+				
+			};
+
+			$scope.ListUsers = function () {
+				
+				var config = {
+					headers : {
+						'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+					}
+				}
+
+				$http.get('/api/users').
+				then(function(response) {
+					$scope.users = response.data;
+					console.log(response.data);
+					console.log(response.status);
+				}, function(response) {
+					console.log(response.data || 'Request failed');
+					console.log(response.status);
+				});
+			
+			};
+			$scope.ListUsers();
+			
+		});
+		</script>
+	</body>
+</html>
